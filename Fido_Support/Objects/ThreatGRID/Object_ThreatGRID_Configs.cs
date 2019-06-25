@@ -22,39 +22,13 @@ using System.Data;
 using System.Linq;
 using Fido_Main.Fido_Support.ErrorHandling;
 using Fido_Main.Fido_Support.FidoDB;
+using Fido_Main.Fido_Support.Objects.Config;
 
 namespace Fido_Main.Fido_Support.Objects.ThreatGRID
 {
-  class Object_ThreatGRID_Configs
+  class Object_ThreatGRID_Configs : Dictionary_Config
   {
-    private static Dictionary<string, string> _dict = new Dictionary<string, string>();
-
-    internal static void LoadConfigFromDb(string table)
-    {
-      var fidoSQLite = new SqLiteDB();
-      _dict = fidoSQLite.GetDataTable("select key, value from " + table).AsEnumerable().ToDictionary<DataRow, string, string>(row => row.Field<string>(0), row => row.Field<string>(1));
-    }
-
-    public static string GetAsString(string name, string dft)
-    {
-      return _dict.ContainsKey(name) ? _dict[name] : dft;
-    }
-
-    public static int GetAsInt(string name, int dft)
-    {
-      return _dict.ContainsKey(name) ? int.Parse(_dict[name]) : dft;
-    }
-
-    public static double GetAsDouble(string name, double dft)
-    {
-      return _dict.ContainsKey(name) ? double.Parse(_dict[name]) : dft;
-    }
-
-    public static bool GetAsBool(string name, bool dft)
-    {
-      return _dict.ContainsKey(name) ? bool.Parse(_dict[name]) : dft;
-    }
-
+   
     internal static Object_ThreatGRID_IP_ConfigClass.ParseConfigs GetThreatGridConfigs(string detect)
     {
       //todo: move this to the database, assign a variable to 'detect' and replace being using in GEtFidoConfigs

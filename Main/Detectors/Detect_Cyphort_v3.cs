@@ -127,6 +127,9 @@ namespace Fido_Main.Main.Detectors
             lFidoReturnValues.TimeOccurred = Convert.ToDateTime(cyphortReturn.Event_Array[i].Last_activity_time).ToUniversalTime().ToString(CultureInfo.InvariantCulture); 
             lFidoReturnValues.DstIP = cyphortReturn.Event_Array[i].Source_ip;
             lFidoReturnValues.Cyphort.DstIP = cyphortReturn.Event_Array[i].Source_ip;
+
+
+
             
             //Send information gathered thus far to function to gather incident details
             //and further parsing to determine if sending to TheDirector is needed.
@@ -174,32 +177,15 @@ namespace Fido_Main.Main.Detectors
                 {
                   lFidoReturnValues.DNSName = lFidoReturnValues.Cyphort.IncidentDetails.Incident.Source_name.Replace(".", "(.)");  
                 }
-                
-
-                if (lFidoReturnValues.Cyphort.IncidentDetails.Incident.Has_exploit == "1")
-                {
-                }
 
                 if (lFidoReturnValues.Cyphort.IncidentDetails.Incident.Has_download == "1")
                 {
                   lFidoReturnValues = FormatDownloadReturnValues(lFidoReturnValues);
                 }
 
-                if (lFidoReturnValues.Cyphort.IncidentDetails.Incident.Has_execution == "1")
-                {
-                }
-
                 if (lFidoReturnValues.Cyphort.IncidentDetails.Incident.Has_infection == "1")
                 {
                   lFidoReturnValues = FormatInfectionReturnValues(lFidoReturnValues);
-                }
-
-                if (lFidoReturnValues.Cyphort.IncidentDetails.Incident.Has_data_theft == "1")
-                {
-                }
-
-                if (lFidoReturnValues.Cyphort.IncidentDetails.Incident.Has_file_submission == "1")
-                {
                 }
               }
             }

@@ -22,6 +22,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using Fido_Main.Fido_Support.Objects.Fido;
+using Fido_Main.Notification.Email;
 
 
 namespace Fido_Main.Notification.Email
@@ -30,7 +31,7 @@ namespace Fido_Main.Notification.Email
   {
 
     //function to send email
-    public static void Send(string sTo, string sCC, string sFrom, string sSubject, string sBody, List<string> lGaugeAttachment, string sEmailAttachment)
+    public static void Send(Email email)
     {
       var sErrorEmail = Object_Fido_Configs.GetAsString("fido.email.erroremail", null);
       var sFidoEmail = Object_Fido_Configs.GetAsString("fido.email.fidoemail", null);
@@ -40,22 +41,22 @@ namespace Fido_Main.Notification.Email
       {
         var mMessage = new MailMessage {IsBodyHtml = true};
         
-        if (!string.IsNullOrEmpty(sTo))
+        if (!string.IsNullOrEmpty(email.sTo))
         {
-          mMessage.To.Add(sTo);
+          mMessage.To.Add(email.sTo);
         }
         else
         {
           Send(sErrorEmail, "", sFidoEmail, "Fido Error", "Fido Failed: No sender specified in email.", null, null);
         }
 
-        if (!string.IsNullOrEmpty(sCC))
+        if (!string.IsNullOrEmpty(email.sCC))
         {
-          mMessage.CC.Add(sCC);
+          mMessage.CC.Add(email.sCC);
         }
-        mMessage.From = new MailAddress(sFrom);
-        mMessage.Body = sBody;
-        mMessage.Subject = sSubject; 
+        mMessage.From = new MailAddress(email.sFrom);
+        mMessage.Body = email.sBody;
+        mMessage.Subject = email.sSubject; 
         
         if (lGaugeAttachment != null)
         {
@@ -90,11 +91,11 @@ namespace Fido_Main.Notification.Email
           }
         }
 
-        if (!string.IsNullOrEmpty(sEmailAttachment))
+        if (!string.IsNullOrEmpty(email.sEmailAttachment))
         {
-          var sAttachment = new Attachment(sEmailAttachment);
+          var sAttachment = new Attachment(email.sEmailAttachment);
           
-          mMessage.Attachments.Add(sAttachment);
+          mMessage.Attachments.Add(email.sAttachment);
         }
 
         using (var sSMTP = new SmtpClient(sSMTPServer))

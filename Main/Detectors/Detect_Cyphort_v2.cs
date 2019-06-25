@@ -83,6 +83,7 @@ namespace Fido_Main.Main.Detectors
     //handoff to TheDirector for FIDO processing.
     private static void ParseCyphort(CyphortClass cyphortReturn)
     {
+      string message = string.Empt;
       try
       {
         if (cyphortReturn.correlations_array != null && cyphortReturn.correlations_array.Any())
@@ -102,21 +103,8 @@ namespace Fido_Main.Main.Detectors
             {
               lFidoReturnValues.Cyphort = new CyphortReturnValues();
             }
-            if (cyphortReturn.correlations_array[i][4].Contains(":")) continue;
-            lFidoReturnValues.SrcIP = cyphortReturn.correlations_array[i][4];
-            lFidoReturnValues.MalwareType = cyphortReturn.correlations_array[i][19] + " and download";
-            lFidoReturnValues.DstIP = cyphortReturn.correlations_array[i][16];
-            lFidoReturnValues.Cyphort.DstIP = cyphortReturn.correlations_array[i][16];
-            lFidoReturnValues.TimeOccurred = Convert.ToDateTime(cyphortReturn.correlations_array[i][2]).ToUniversalTime().ToString(CultureInfo.InvariantCulture);
-            lFidoReturnValues.Cyphort.EventTime = Convert.ToDateTime(cyphortReturn.correlations_array[i][2]).ToUniversalTime().ToString(CultureInfo.InvariantCulture);
-            lFidoReturnValues.Cyphort.EventID = cyphortReturn.correlations_array[i][1];
-            lFidoReturnValues.AlertID = lFidoReturnValues.Cyphort.EventID;
-            lFidoReturnValues.Cyphort.URL = new List<string> { cyphortReturn.correlations_array[i][12] };
-            lFidoReturnValues.Url = new List<string> { cyphortReturn.correlations_array[i][12] };
-            lFidoReturnValues.Cyphort.Domain = new List<string> { cyphortReturn.correlations_array[i][11] };
-            lFidoReturnValues.Cyphort.MD5Hash = new List<string> { cyphortReturn.correlations_array[i][7] };
-            lFidoReturnValues.Hash = new List<string> { cyphortReturn.correlations_array[i][7] };
-            lFidoReturnValues.CurrentDetector = "cyphortv2";
+            message = " and download";
+            lFidoReturnValues = SetIFidoReturnValues(lFidoReturnValues,cyphortReturn.correlations_array, message);           
 
             //Using the Hostname/SrcIP, check the FidoDB to see if any previous alerts were generated
             lFidoReturnValues.PreviousAlerts = Matrix_Historical_Helper.GetPreviousMachineAlerts(lFidoReturnValues, false);
@@ -152,21 +140,9 @@ namespace Fido_Main.Main.Detectors
             {
               lFidoReturnValues.Cyphort = new CyphortReturnValues();
             }
-            if (cyphortReturn.downloads_array[i][4].Contains(":")) continue;
-            lFidoReturnValues.SrcIP = cyphortReturn.downloads_array[i][4];
-            lFidoReturnValues.MalwareType = cyphortReturn.downloads_array[i][20] + " download detected";
-            lFidoReturnValues.DstIP = cyphortReturn.downloads_array[i][16];
-            lFidoReturnValues.Cyphort.DstIP = cyphortReturn.downloads_array[i][16];
-            lFidoReturnValues.TimeOccurred = Convert.ToDateTime(cyphortReturn.downloads_array[i][2]).ToString(CultureInfo.InvariantCulture);
-            lFidoReturnValues.Cyphort.EventTime = Convert.ToDateTime(cyphortReturn.downloads_array[i][2]).ToString(CultureInfo.InvariantCulture);
-            lFidoReturnValues.Cyphort.EventID = cyphortReturn.downloads_array[i][0];
-            lFidoReturnValues.AlertID = lFidoReturnValues.Cyphort.EventID;
-            lFidoReturnValues.Cyphort.URL = new List<string> {cyphortReturn.downloads_array[i][12]};
-            lFidoReturnValues.Url = new List<string> {cyphortReturn.downloads_array[i][12]};
-            lFidoReturnValues.Cyphort.Domain = new List<string> { cyphortReturn.downloads_array[i][11] };
-            lFidoReturnValues.Cyphort.MD5Hash = new List<string> { cyphortReturn.downloads_array[i][7] };
-            lFidoReturnValues.Hash = new List<string> { cyphortReturn.downloads_array[i][7] };
-            lFidoReturnValues.CurrentDetector = "cyphortv2";
+            message = " download detected";
+            lFidoReturnValues = SetIFidoReturnValues(lFidoReturnValues,cyphortReturn.downloads_array, message);
+        
             lFidoReturnValues.PreviousAlerts = Matrix_Historical_Helper.GetPreviousMachineAlerts(lFidoReturnValues, false);
             if (lFidoReturnValues.PreviousAlerts.Alerts != null && lFidoReturnValues.PreviousAlerts.Alerts.Rows.Count > 0)
             {
@@ -196,21 +172,10 @@ namespace Fido_Main.Main.Detectors
             {
               lFidoReturnValues.Cyphort = new CyphortReturnValues();
             }
-            if (cyphortReturn.infections_array[i][4].Contains(":")) continue;
-            lFidoReturnValues.SrcIP = cyphortReturn.infections_array[i][4];
-            lFidoReturnValues.MalwareType = "C&C external communication detected";
-            lFidoReturnValues.DstIP = cyphortReturn.infections_array[i][16];
-            lFidoReturnValues.Cyphort.DstIP = cyphortReturn.infections_array[i][16];
-            lFidoReturnValues.TimeOccurred = Convert.ToDateTime(cyphortReturn.infections_array[i][2]).ToString(CultureInfo.InvariantCulture);
-            lFidoReturnValues.Cyphort.EventTime = Convert.ToDateTime(cyphortReturn.infections_array[i][2]).ToString(CultureInfo.InvariantCulture);
-            lFidoReturnValues.Cyphort.EventID = cyphortReturn.infections_array[i][1];
-            lFidoReturnValues.AlertID = lFidoReturnValues.Cyphort.EventID;
-            lFidoReturnValues.Cyphort.URL = new List<string> { cyphortReturn.infections_array[i][12] };
-            lFidoReturnValues.Url = new List<string> { cyphortReturn.infections_array[i][12] };
-            lFidoReturnValues.Cyphort.Domain = new List<string> { cyphortReturn.infections_array[i][11] };
-            lFidoReturnValues.Cyphort.MD5Hash = new List<string> { cyphortReturn.infections_array[i][7] };
-            lFidoReturnValues.Hash = new List<string> { cyphortReturn.infections_array[i][7] };
-            lFidoReturnValues.CurrentDetector = "cyphortv2";
+
+            message = "C&C external communication detected";
+            lFidoReturnValues = SetIFidoReturnValues(lFidoReturnValues,cyphortReturn.infections_array, message);
+           
             lFidoReturnValues.PreviousAlerts = Matrix_Historical_Helper.GetPreviousMachineAlerts(lFidoReturnValues, false);
             if (lFidoReturnValues.PreviousAlerts.Alerts != null && lFidoReturnValues.PreviousAlerts.Alerts.Rows.Count > 0)
             {
@@ -226,11 +191,32 @@ namespace Fido_Main.Main.Detectors
       }
       catch (Exception e)
       {
-        Fido_EventHandler.SendEmail("Fido Error", "Fido Failed: {0} Exception caught in Cyphort Detector parse:" + e);
-      }
-    }
+                Fido_EventHandler.SendEmail("Fido Error", "Fido Failed: {0} Exception caught in Cyphort Detector parse:" + e);
+            }
+        }
 
-    private static bool PreviousAlert(FidoReturnValues lFidoReturnValues)
+
+        private FidoReturnValues SetIFidoReturnValues(FidoReturnValues lFidoReturnValues, string[][] array, string message)
+        {
+            if (array[i][4].Contains(":")) continue;
+            lFidoReturnValues.SrcIP = array[i][4];
+            lFidoReturnValues.MalwareType = array[i][19] + message;
+            lFidoReturnValues.DstIP = array[i][16];
+            lFidoReturnValues.Cyphort.DstIP = array[i][16];
+            lFidoReturnValues.TimeOccurred = Convert.ToDateTime(array[i][2]).ToUniversalTime().ToString(CultureInfo.InvariantCulture);
+            lFidoReturnValues.Cyphort.EventTime = Convert.ToDateTime(array[i][2]).ToUniversalTime().ToString(CultureInfo.InvariantCulture);
+            lFidoReturnValues.Cyphort.EventID = array[i][1];
+            lFidoReturnValues.AlertID = lFidoReturnValues.Cyphort.EventID;
+            lFidoReturnValues.Cyphort.URL = new List<string> { array[i][12] };
+            lFidoReturnValues.Url = new List<string> { array[i][12] };
+            lFidoReturnValues.Cyphort.Domain = new List<string> { array[i][11] };
+            lFidoReturnValues.Cyphort.MD5Hash = new List<string> { array[i][7] };
+            lFidoReturnValues.Hash = new List<string> { array[i][7] };
+            lFidoReturnValues.CurrentDetector = "cyphortv2";
+            return lFidoReturnValues;
+        }
+
+        private static bool PreviousAlert(FidoReturnValues lFidoReturnValues)
     {
       var isRunDirector = false;
       for (var j = 0; j < lFidoReturnValues.PreviousAlerts.Alerts.Rows.Count; j++)
