@@ -257,23 +257,6 @@ namespace Fido_Main.Director
       }
     }
 
-    //todo: is this still necessary? should we handle this in the bit9 module?
-    private static FidoReturnValues FireEyeHashToBit9(FidoReturnValues lFidoReturnValues)
-    {
-      //Check FireEye returns and  go to Bit9 to see if the hash exists, where and
-      //if it was executed, then go to VT and pass hash info on there too
-      var lVirusTotalReturnValues = new VirusTotalReturnValues();
-      List<string> sBit9FileInfo = Detect_Bit9.GetFileInfo(lFidoReturnValues.FireEye.MD5Hash, null);
-      if (sBit9FileInfo.Count == 0) return lFidoReturnValues;
-      if (lFidoReturnValues.Bit9 == null)
-      {
-        lFidoReturnValues.Bit9 = new Bit9ReturnValues {Bit9Hashes = sBit9FileInfo.ToArray()};
-      }
-      else
-      {
-        lFidoReturnValues.Bit9.Bit9Hashes = sBit9FileInfo.ToArray();
-      }
-      return lFidoReturnValues;
-    }
+
   }
 }
