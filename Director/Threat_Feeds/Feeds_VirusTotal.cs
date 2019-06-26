@@ -42,13 +42,7 @@ namespace Fido_Main.Director.Threat_Feeds
       static int _retryCounter = Retry;
       private string _apiKey;
 
-    public static List<FileReport> VirusTotalHash(List<string> lHashes)
-    {
-      if (lHashes.Count == 0) return null;
-      var sVTMD5Array = lHashes.ToArray();
-      var lVTHashRet = ParseHash(sVTMD5Array);
-      return lVTHashRet;
-    }
+    
 
     public Feeds_VirusTotal(string apiKey)
     {
